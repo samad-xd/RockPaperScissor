@@ -1,3 +1,59 @@
+let playerWins = 0;
+let computerWins = 0;
+
+const buttons = document.querySelectorAll('button');
+
+const result = document.querySelector('.result');
+
+buttons.forEach(button => button.addEventListener('click', () => {
+    if(playerWins == 5 || computerWins == 5) {
+        return;
+    }
+    playRound(button);
+}));
+
+function playRound(e) {
+    let computerSelection = getComputerChoice();
+    let playerSelection = e.classList.value;
+    const computerChoice = document.querySelector('.computer-choice');
+    const playerChoice = document.querySelector('.player-choice');
+    computerChoice.textContent = computerSelection;
+    playerChoice.textContent = playerSelection;
+    const winner = getWinner(computerSelection, playerSelection);
+    const displayPlayerScore = document.querySelector('.player-score');
+    const displayComputerScore  = document.querySelector('.computer-score');
+    if(winner === "player") {
+        playerWins++;
+        displayPlayerScore.textContent = playerWins;
+    }
+    else if(winner === "computer") {
+        computerWins++;
+        displayComputerScore.textContent = computerWins;
+    }
+    else if(winner === "tie") {
+        playerWins++;
+        displayPlayerScore.textContent = playerWins;
+        computerWins++;
+        displayComputerScore.textContent = computerWins;
+    }
+    else {
+        console.log("Unknown ERROR");
+        result.textContent = "Unknown ERROR";
+    }
+    if(playerWins == 5 && computerWins == 5) {
+        result.textContent = "Oops! It's a Tie.";
+        return;
+    }
+    if(playerWins == 5) {
+        result.textContent = "Congrats! You Won!";
+        return;
+    } 
+    if(computerWins == 5) {
+        result.textContent = "Ooh! You Lost";
+        return;
+    }
+}
+
 function getComputerChoice() {
     const randomNumber = Math.floor(Math.random()*3)+1;
     if(randomNumber === 1) {
@@ -9,21 +65,6 @@ function getComputerChoice() {
     else {
         return "scissor";
     }
-}
-
-function playRound(computerChoice, playerChoice) {
-    console.log("computerChoice: " + computerChoice);
-    console.log("playerChoice: " + playerChoice);
-    const winner = getWinner(computerChoice, playerChoice);
-    return winner;
-}
-
-function displayWon() {
-    console.log("Congrats! You won.");
-}
-
-function displayLost() {
-    console.log("Ooh! You LOST");
 }
 
 function getWinner(a, b) {
@@ -56,37 +97,4 @@ function getWinner(a, b) {
     }
 }
 
-function getPlayerChoice() {
-    const playerChoice = prompt("Enter your choice!", "");
-    return playerChoice;
-}
 
-function game() {
-    let playerWins = 0;
-    let computerWins = 0;
-    for(let i=0 ; i<5 ; i++) {
-        const computerChoice = getComputerChoice();
-        const playerChoice = getPlayerChoice();
-        const winner = playRound(computerChoice, playerChoice);
-        if(winner === "computer") {
-            computerWins++;
-        }
-        else if(winner === "player") {
-            playerWins++;
-        }
-        console.log("computerWins: " + computerWins);
-        console.log("playerWins: " + playerWins);
-    }
-    if(playerWins < computerWins) {
-        displayLost();
-    }
-    else {
-        displayWon();
-    }
-    const x = confirm("Do you want to try again?");
-    if(x) {
-        game();
-    }
-}
-
-game();
